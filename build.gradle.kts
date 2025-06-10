@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.purpurmc.purpur", "purpur-api", "1.21-R0.1-SNAPSHOT")
+    compileOnly("org.purpurmc.purpur", "purpur-api", "1.21.4-R0.1-SNAPSHOT")
     compileOnly("de.themoep:minedown-adventure:1.7.4-SNAPSHOT")
     compileOnly("com.zaxxer:HikariCP:6.3.0")
     compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
