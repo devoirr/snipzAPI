@@ -102,7 +102,7 @@ fun itemStackOf(section: ConfigurationSection, vararg placeholders: TagResolver)
             } else {
                 attributes = attributes.addModifier(
                     attribute,
-                    AttributeModifier(attribute.key, boost, AttributeModifier.Operation.ADD_NUMBER)
+                    AttributeModifier(attribute.key, boost, AttributeModifier.Operation.ADD_SCALAR)
                 )
             }
         }
@@ -126,7 +126,7 @@ fun itemStackOf(section: ConfigurationSection, vararg placeholders: TagResolver)
                 println("[API] Флаг $flagName не распознан!")
                 continue
             }
-            
+
             itemStack.editMeta { meta ->
                 meta.addItemFlags(flag)
             }
