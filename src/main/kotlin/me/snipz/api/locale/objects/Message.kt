@@ -1,6 +1,5 @@
 package me.snipz.api.locale.objects
 
-import de.themoep.minedown.adventure.MineDown
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.FileConfiguration
@@ -23,7 +22,7 @@ class Message(private val lines: List<String>) {
             }
             return@map text
         }
-            .map { MineDown.parse(it) }
+            .map { MiniMessage.miniMessage().deserialize(it) }
             .forEach { line -> sender.sendMessage(line) }
     }
 
@@ -32,7 +31,7 @@ class Message(private val lines: List<String>) {
     }
 
     fun sendActionBar(player: Player) {
-        player.sendActionBar(MineDown.parse(lines.first()))
+        player.sendActionBar(MiniMessage.miniMessage().deserialize(lines.first()))
     }
 
     fun sendActionBar(player: Player, vararg replacements: Pair<String, String>) {
@@ -42,7 +41,7 @@ class Message(private val lines: List<String>) {
         }
 
         player.sendActionBar {
-            MineDown.parse(line)
+            MiniMessage.miniMessage().deserialize(line)
         }
     }
 
