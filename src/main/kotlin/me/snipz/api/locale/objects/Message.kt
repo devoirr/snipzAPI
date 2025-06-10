@@ -1,6 +1,7 @@
 package me.snipz.api.locale.objects
 
 import de.themoep.minedown.adventure.MineDown
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
@@ -10,7 +11,7 @@ class Message(private val lines: List<String>) {
     private val singleLine = lines.joinToString(" ")
 
     fun send(sender: CommandSender) {
-        lines.map { MineDown.parse(it) }
+        lines.map { MiniMessage.miniMessage().deserialize(it) }
             .forEach { line -> sender.sendMessage(line) }
     }
 
