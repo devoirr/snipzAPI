@@ -56,7 +56,7 @@ fun itemStackOf(section: ConfigurationSection, vararg placeholders: TagResolver)
     section.getString("enchantments")?.let { enchantmentsString ->
         val pairs = enchantmentsString.lowercase().split(", ")
 
-        val enchantments = ItemEnchantments.itemEnchantments()
+        var enchantments = ItemEnchantments.itemEnchantments()
         pairs.forEach { pair ->
             val args = pair.split(" ")
 
@@ -70,7 +70,7 @@ fun itemStackOf(section: ConfigurationSection, vararg placeholders: TagResolver)
             val enc = RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT)
                 .get(NamespacedKey.minecraft(enchantmentName)) ?: return@forEach
 
-            enchantments.add(enc, level)
+            enchantments = enchantments.add(enc, level)
         }
 
         itemStack.setData(DataComponentTypes.ENCHANTMENTS, enchantments)
@@ -79,7 +79,7 @@ fun itemStackOf(section: ConfigurationSection, vararg placeholders: TagResolver)
     section.getString("attributes")?.let { atrString ->
         val pairs = atrString.lowercase().split(", ")
 
-        val attributes = ItemAttributeModifiers.itemAttributes()
+        var attributes = ItemAttributeModifiers.itemAttributes()
         pairs.forEach { pair ->
             val args = pair.split(" ")
             if (args.count() < 2)
@@ -95,17 +95,19 @@ fun itemStackOf(section: ConfigurationSection, vararg placeholders: TagResolver)
             } else null
 
             if (slot != null) {
-                attributes.addModifier(
+                attributes = attributes.addModifier(
                     attribute,
                     AttributeModifier(attribute.key, boost, AttributeModifier.Operation.ADD_NUMBER, slot)
                 )
             } else {
-                attributes.addModifier(
+                attributes = attributes.addModifier(
                     attribute,
                     AttributeModifier(attribute.key, boost, AttributeModifier.Operation.ADD_NUMBER)
                 )
             }
         }
+
+        itemStack.setData(DataComponentTypes.ATTRIBUTE_MODIFIERS, attributes)
     }
 
     // ФЛАГИ (устанавливать в конце)
