@@ -113,8 +113,26 @@ fun itemStackOf(section: ConfigurationSection, vararg placeholders: TagResolver)
     // ФЛАГИ (устанавливать в конце)
     section.getString("flags")?.split(", ")?.map { it.uppercase() }
         ?.mapNotNull { ItemFlag.entries.firstOrNull { flag -> flag.name == it } }?.let { flags ->
-            itemStack.addItemFlags(*flags.toTypedArray())
+            itemStack.editMeta { meta ->
+                meta.addItemFlags(*flags.toTypedArray())
+            }
         }
+
+    val flags = section.getString("flags")?.split(", ")?.map { it.uppercase() }
+    if (flags != null) {
+        for (flagName in flags) {
+            val flag = ItemFlag.entries.firstOrNull { it.name == flagName }
+            if (flag == null) {
+                println("[API] Флаг $flagName не распознан!")
+                continue
+            }
+            
+            itemStack.editMeta { meta ->
+                meta.addItemFlags(flag)
+            }
+        }
+    }
+
 
     return itemStack
 }
