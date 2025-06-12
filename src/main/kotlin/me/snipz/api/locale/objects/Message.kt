@@ -1,48 +1,46 @@
 package me.snipz.api.locale.objects
 
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextReplacementConfig
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 
-class Message(private val lines: List<String>) {
+data class Message(private var lines: List<Component>) {
 
-    private val singleLine = lines.joinToString(" ")
+    constructor(lines: List<String>) : this(lines.map { MiniMessage.miniMessage().deserialize(it) })
+
+    private val singleLine = lines.joinToString(" ") { MiniMessage.miniMessage().serialize(it) }
+
+    private var isCloned = false
 
     fun send(sender: CommandSender) {
-        lines.map { MiniMessage.miniMessage().deserialize(it) }
-            .forEach { line -> sender.sendMessage(line) }
+        lines.forEach { line -> sender.sendMessage(line) }
     }
 
-    fun send(sender: CommandSender, replacements: Map<String, String>) {
-        lines.map {
-            var text = it
-            replacements.forEach { replacement ->
-                text = text.replace(replacement.key, replacement.value)
+    fun placeholder(key: String, replacement: String): Message {
+        if (!this.isCloned) {
+            val message = this.copy()
+            message.isCloned = true
+
+            return message.placeholder(key, replacement)
+        } else {
+
+            this.lines = lines.map { component ->
+                component.replaceText {
+                    TextReplacementConfig.builder().matchLiteral(key)
+                        .replacement(replacement)
+                        .build()
+                }
             }
-            return@map text
-        }
-            .map { MiniMessage.miniMessage().deserialize(it) }
-            .forEach { line -> sender.sendMessage(line) }
-    }
 
-    fun send(sender: CommandSender, vararg replacements: Pair<String, String>) {
-        send(sender, replacements.toMap())
+            return this
+        }
     }
 
     fun sendActionBar(player: Player) {
-        player.sendActionBar(MiniMessage.miniMessage().deserialize(lines.first()))
-    }
-
-    fun sendActionBar(player: Player, vararg replacements: Pair<String, String>) {
-        var line = singleLine
-        replacements.forEach { replacement ->
-            line = line.replace(replacement.first, replacement.second)
-        }
-
-        player.sendActionBar {
-            MiniMessage.miniMessage().deserialize(line)
-        }
+        player.sendActionBar(lines.first())
     }
 
     fun isSingleLine() = lines.size == 1
