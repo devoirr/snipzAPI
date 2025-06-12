@@ -43,11 +43,12 @@ data class Message(private var lines: List<Component>) {
         } else {
 
             this.lines = lines.map { component ->
-                component.replaceText {
-                    TextReplacementConfig.builder().matchLiteral(key)
+                component.replaceText(
+                    TextReplacementConfig.builder()
+                        .matchLiteral(key)
                         .replacement(replacement)
                         .build()
-                }
+                )
             }
 
             return this
