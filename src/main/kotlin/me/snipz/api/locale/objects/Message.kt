@@ -9,7 +9,18 @@ import org.bukkit.entity.Player
 
 data class Message(private var lines: List<Component>) {
 
-    constructor(lines: List<String>) : this(lines.map { MiniMessage.miniMessage().deserialize(it) })
+    companion object {
+        // Фабричный метод для создания экземпляра Message из списка строк.
+        // Использует MiniMessage для десериализации каждой строки в Component.
+        fun of(lines: List<String>): Message {
+            return Message(lines.map { MiniMessage.miniMessage().deserialize(it) })
+        }
+
+        // Фабричный метод для создания экземпляра Message из одной строки.
+        fun of(line: String): Message {
+            return Message(listOf(MiniMessage.miniMessage().deserialize(line)))
+        }
+    }
 
     private val singleLine = lines.joinToString(" ") { MiniMessage.miniMessage().serialize(it) }
 
@@ -47,9 +58,9 @@ data class Message(private var lines: List<Component>) {
 
     fun write(config: FileConfiguration, key: String) {
         if (isSingleLine()) {
-            config.set(key, lines.first())
+            config.set(key, MiniMessage.miniMessage().serialize(lines.first()))
         } else {
-            config.set(key, lines)
+            config.set(key, lines.map { MiniMessage.miniMessage().serialize(it) })
         }
     }
 

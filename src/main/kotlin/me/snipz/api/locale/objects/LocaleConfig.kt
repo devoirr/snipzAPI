@@ -22,9 +22,9 @@ class LocaleConfig<E>(private val file: File, private val enumClass: Class<E>) w
 
             if (handle.getKeys(false).contains(constant.name.lowercase())) {
                 if (handle.isList(constant.name.lowercase())) {
-                    messages[constant] = Message(handle.getStringList(constant.name.lowercase()))
+                    messages[constant] = Message.of(handle.getStringList(constant.name.lowercase()))
                 } else {
-                    messages[constant] = Message(listOf(handle.getString(constant.name.lowercase())!!))
+                    messages[constant] = Message.of(listOf(handle.getString(constant.name.lowercase())!!))
                 }
             } else {
                 defaultMessage.write(handle, constant.name.lowercase())
@@ -36,7 +36,7 @@ class LocaleConfig<E>(private val file: File, private val enumClass: Class<E>) w
     }
 
     fun getMessage(constant: E): Message {
-        return messages[constant] ?: Message(emptyList<String>())
+        return messages[constant] ?: Message.of(emptyList())
     }
 
 }
