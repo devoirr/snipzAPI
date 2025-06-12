@@ -36,7 +36,7 @@ class LocaleConfig<E>(private val file: File, private val enumClass: Class<E>) w
     }
 
     fun getMessage(constant: E): Message {
-        return messages[constant] ?: Message(emptyList())
+        return messages[constant] ?: Message(emptyList<String>())
     }
 
 }
