@@ -31,6 +31,10 @@ data class Message(private var lines: List<Component>) {
     }
 
     fun placeholder(key: String, replacement: String): Message {
+        return placeholder(key, Component.text(replacement))
+    }
+
+    fun placeholder(key: String, replacement: Component): Message {
         if (!this.isCloned) {
             val message = this.copy()
             message.isCloned = true
