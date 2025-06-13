@@ -60,7 +60,7 @@ fun itemStackOf(section: ConfigurationSection, vararg placeholders: TagResolver)
         pairs.forEach { pair ->
             val args = pair.split(" ")
 
-            val enchantmentName: String = args[0].lowercase()
+            val enchantmentName: String = args[0]
             val level: Int = if (args.size == 1) {
                 1
             } else {
@@ -86,8 +86,15 @@ fun itemStackOf(section: ConfigurationSection, vararg placeholders: TagResolver)
                 return@forEach
 
             val attributeName = args[0].lowercase()
+            val namespacedKey: NamespacedKey
+            try {
+                namespacedKey = NamespacedKey.minecraft(attributeName)
+            } catch (e: Exception) {
+                println("Couldn't create key for $attributeName, skipping...")
+                return@forEach
+            }
 
-            val attribute = Registry.ATTRIBUTE.get(NamespacedKey.minecraft(attributeName)) ?: return@forEach
+            val attribute = Registry.ATTRIBUTE.get(namespacedKey) ?: return@forEach
             val boost = args[1].toDoubleOrNull() ?: return@forEach
 
             val slot = if (args.count() > 2) {
