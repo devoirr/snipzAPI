@@ -60,7 +60,7 @@ fun itemStackOf(section: ConfigurationSection, vararg placeholders: TagResolver)
         pairs.forEach { pair ->
             val args = pair.split(" ")
 
-            val enchantmentName: String = args[0]
+            val enchantmentName: String = args[0].lowercase()
             val level: Int = if (args.size == 1) {
                 1
             } else {
@@ -85,7 +85,7 @@ fun itemStackOf(section: ConfigurationSection, vararg placeholders: TagResolver)
             if (args.count() < 2)
                 return@forEach
 
-            val attributeName = args[0]
+            val attributeName = args[0].lowercase()
 
             val attribute = Registry.ATTRIBUTE.get(NamespacedKey.minecraft(attributeName)) ?: return@forEach
             val boost = args[1].toDoubleOrNull() ?: return@forEach
