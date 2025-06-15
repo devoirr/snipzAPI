@@ -8,8 +8,9 @@ typealias PlayerExecutor = (Player, List<String>) -> Unit
 typealias GenericExecutor = (CommandSender, List<String>) -> Unit
 typealias TabCompleteProvider = (CommandSender, List<String>) -> List<String>
 
-fun command(name: String, init: CommandBuilder.() -> Unit): BukkitCommand {
+fun command(name: String, permission: String, init: CommandBuilder.() -> Unit): BukkitCommand {
     val builder = CommandBuilder(name)
+    builder.permission = permission
     builder.init()
 
     return builder.build()
