@@ -101,13 +101,13 @@ fun itemStackOf(section: ConfigurationSection, vararg placeholders: TagResolver)
                 EquipmentSlotGroup.getByName(args[2].lowercase())
             } else null
 
-            if (slot != null) {
-                attributes = attributes.addModifier(
+            attributes = if (slot != null) {
+                attributes.addModifier(
                     attribute,
                     AttributeModifier(attribute.key, boost, AttributeModifier.Operation.ADD_NUMBER, slot)
                 )
             } else {
-                attributes = attributes.addModifier(
+                attributes.addModifier(
                     attribute,
                     AttributeModifier(attribute.key, boost, AttributeModifier.Operation.ADD_SCALAR)
                 )
