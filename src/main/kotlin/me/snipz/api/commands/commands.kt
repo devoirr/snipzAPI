@@ -1,5 +1,6 @@
 package me.snipz.api.commands
 
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.command.CommandSender
 import org.bukkit.command.defaults.BukkitCommand
 import org.bukkit.entity.Player
@@ -15,6 +16,11 @@ fun command(name: String, permission: String, init: CommandBuilder.() -> Unit): 
 
     return builder.build()
 }
+
+open class CommandException(message: String) : Exception(message)
+
+class UsageException(usage: String) : CommandException("&fㅅ Использование: &c$usage")
+class PlayerNotFoundException(name: String) : CommandException("&fㅅ Игрок &c$name &fне найден!")
 
 class CommandBuilder(
     val name: String,
@@ -71,18 +77,22 @@ class CommandBuilder(
     }
 
     private fun execute(sender: CommandSender, args: List<String>) {
-        when {
-            sender is Player && playerExecutor != null -> {
-                playerExecutor?.invoke(sender, args)
-            }
+        try {
+            when {
+                sender is Player && playerExecutor != null -> {
+                    playerExecutor?.invoke(sender, args)
+                }
 
-            genericExecutor != null -> {
-                genericExecutor?.invoke(sender, args)
-            }
+                genericExecutor != null -> {
+                    genericExecutor?.invoke(sender, args)
+                }
 
-            else -> {
-                sender.sendMessage("Эта команда доступна только игрокам.")
+                else -> {
+                    sender.sendMessage("Эта команда доступна только игрокам.")
+                }
             }
+        } catch (e: CommandException) {
+            sender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(e.message!!))
         }
     }
 
