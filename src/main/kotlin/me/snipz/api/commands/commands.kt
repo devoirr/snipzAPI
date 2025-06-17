@@ -23,6 +23,7 @@ open class CommandException(message: String) : Exception(message)
 
 class UsageException(usage: String) : CommandException("&fㅅ Использование: &c$usage")
 class PlayerNotFoundException(name: String) : CommandException("&fㅅ Игрок &c$name &fне найден!")
+class AbstractCommandException(message: String) : CommandException("&fㅅ $message")
 
 class CommandBuilder(
     val name: String,
