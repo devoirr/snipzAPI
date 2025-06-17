@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package me.snipz.api.commands
 
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
